@@ -1,8 +1,10 @@
 <?php
-    session_start();
-    if(!isset($_SESSION['id']) && !isset($_SESSION['username']))
-    	header("location:index.php");
-    ?>
+session_start();
+if (!isset($_SESSION['id']) && !isset($_SESSION['username'])) {
+	header("location:index.php");
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -11,14 +13,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Questions for Quiz | <?=ucwords($_SESSION['company_name'])?> - Admin Panel </title>
-        <?php include 'include-css.php';?>
-    </head>
+        <title>Questions for Quiz | <?=ucwords($_SESSION['company_name'])?>- Admin Panel </title>
+<?php include 'include-css.php';?>
+</head>
     <body class="nav-md">
         <div class="container body">
             <div class="main_container">
-                <?php include 'sidebar.php';?>
-                <!-- page content -->
+<?php include 'sidebar.php';?>
+<!-- page content -->
                 <div class="right_col" role="main">
                     <!-- top tiles -->
                     <br />
@@ -27,6 +29,7 @@
                             <div class="x_panel">
                                 <div class="x_title">
                                     <h2>Questions for Quiz <small>Create New Question</small></h2>
+                                    <a href="level_article.php" class="btn btn-primary pull-right"> Create a Level Article </a>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="x_content">
@@ -37,18 +40,18 @@
 											<div class="form-group">
 												<label class="control-label col-md-1 col-sm-3 col-xs-12" for="category">Category</label>
 												<div class="col-md-4 col-sm-6 col-xs-12">
-												<?php 
-												$db->sql("SET NAMES 'utf8'");
-												$sql = "select id,`category_name` from `category` order by id desc";
-													$db->sql($sql);
-													$res = $db->getResult();
-												?>
-													<select name='category' id='category' class='form-control' required>
+<?php
+$db->sql("SET NAMES 'utf8'");
+$sql = "select id,`category_name` from `category` order by id desc";
+$db->sql($sql);
+$res = $db->getResult();
+?>
+<select name='category' id='category' class='form-control' required>
 														<option value=''>Select Main Category</option>
-														<?php foreach($res as $row){?>
-														<option value='<?=$row['id']?>'><?=$row['category_name']?></option>
-														<?php }?>
-													</select>
+<?php foreach ($res as $row) {?>
+																		<option value='<?=$row['id']?>'><?=$row['category_name']?></option>
+	<?php }?>
+</select>
 												</div>
 												<label class="control-label col-md-2 col-sm-3 col-xs-12" for="subcategory">Sub Category</label>
 												<div class="col-md-4 col-sm-6 col-xs-12">
@@ -118,7 +121,7 @@
 													<textarea name='note' id='note' class='form-control'></textarea>
 												</div>
 											</div>
-											
+
 											<div class="ln_solid"></div>
 											<div class="form-group">
 												<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-1">
@@ -139,9 +142,9 @@
 										<div class='col-md-4'>
 											<select id='filter_category' class='form-control' required>
 												<option value=''>Select Main Category</option>
-												<?php foreach($res as $row){?>
-												<option value='<?=$row['id']?>'><?=$row['category_name']?></option>
-												<?php }?>
+<?php foreach ($res as $row) {?>
+																<option value='<?=$row['id']?>'><?=$row['category_name']?></option>
+	<?php }?>
 											</select>
 										</div>
 										<div class='col-md-4'>
@@ -177,7 +180,7 @@
 										data-export-types='["txt","excel"]'
 										data-export-options='{
 											"fileName": "questions-list-<?=date('d-m-y')?>",
-											"ignoreColumn": ["state"]	
+											"ignoreColumn": ["state"]
 										}'
 										data-query-params="queryParams_1"
 										>
@@ -224,10 +227,10 @@
 									<div class="col-md-4 col-sm-6 col-xs-12">
 										<select name='category' id='edit_category' class='form-control' required>
 											<option value=''>Select Main Category</option>
-											<?php foreach($res as $row){?>
-											<option value='<?=$row['id']?>'><?=$row['category_name']?></option>
-											<?php }?>
-										</select>
+<?php foreach ($res as $row) {?>
+															<option value='<?=$row['id']?>'><?=$row['category_name']?></option>
+	<?php }?>
+</select>
 									</div>
 									<label class="control-label col-md-2 col-sm-3 col-xs-12" for="subcategory">Sub Category</label>
 									<div class="col-md-4 col-sm-6 col-xs-12">
@@ -296,7 +299,7 @@
 										<textarea name="note" id="edit_note" class="form-control"></textarea>
 									</div>
 								</div>
-								
+
 								<div class="ln_solid"></div>
                                 <div class="form-group">
                                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
@@ -310,7 +313,7 @@
                 </div>
             </div>
             <!-- footer content -->
-            <?php include 'footer.php';?>
+<?php include 'footer.php';?>
             <!-- /footer content -->
         </div>
         </div>
@@ -367,7 +370,7 @@
 			$('#questions').bootstrapTable('refresh');
 		});
 		</script>
-		
+
 		<script>
             $('#register_form').validate({
             	rules:{
@@ -409,7 +412,7 @@
 						}
 					});
             	}
-            }); 
+            });
         </script>
 		<script>
 			var $table = $('#questions');
@@ -493,7 +496,7 @@
 					}
 					});
             	}
-            }); 
+            });
         </script>
 		<script>
 		$(document).on('click','.delete-question',function(){
