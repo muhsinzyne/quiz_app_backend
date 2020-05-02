@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: application/json");
 header("Expires: 0");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
@@ -12,7 +12,7 @@ $db->connect();
 date_default_timezone_set('Asia/Kolkata');
 $db->sql("SET NAMES 'utf8'");
 
-$response = array();
+$response   = array();
 $access_key = "6808";
 
 /* 	API methods
@@ -28,28 +28,28 @@ $access_key = "6808";
 // 1. get_categories() - get category details
 if (isset($_POST['access_key']) && isset($_POST['get_categories'])) {
 	/* Parameters to be passed
-		access_key:6808
-		get_categories:1
-		id:31 //{optional}
-	*/
+	access_key:6808
+	get_categories:1
+	id:31 //{optional}
+	 */
 	if ($access_key != $_POST['access_key']) {
-		$response['error'] = "true";
+		$response['error']   = "true";
 		$response['message'] = "Invalid Access Key";
 		print_r(json_encode($response));
 		return false;
 	}
 	if (isset($_POST['id'])) {
-		$id = $db->escapeString($_POST['id']);
+		$id  = $db->escapeString($_POST['id']);
 		$sql = "SELECT *,(SELECT @no_of_subcategories := count(*) from subcategory s WHERE s.maincat_id = c.id and s.status = 1 ) as no_of, if(@no_of_subcategories = 0, (SELECT @maxlevel := MAX(`level`) from question q WHERE c.id = q.category ),@maxlevel := 0) as `maxlevel` FROM `category` c WHERE c.id = $id ORDER By c.row_order ASC";
 		$db->sql($sql);
 		$result = $db->getResult();
 		// print_r($result);
 		if (!empty($result)) {
-			$result[0]['image'] = (!empty($result[0]['image'])) ? DOMAIN_URL . 'category/' . $result[0]['image'] : '';
-			$response['error'] = "false";
-			$response['data'] = $result[0];
+			$result[0]['image'] = (!empty($result[0]['image']))?DOMAIN_URL.'category/'.$result[0]['image']:'';
+			$response['error']  = "false";
+			$response['data']   = $result[0];
 		} else {
-			$response['error'] = "true";
+			$response['error']   = "true";
 			$response['message'] = "No data found!";
 		}
 		print_r(json_encode($response));
@@ -60,12 +60,12 @@ if (isset($_POST['access_key']) && isset($_POST['get_categories'])) {
 		// print_r($result);
 		if (!empty($result)) {
 			for ($i = 0; $i < count($result); $i++) {
-				$result[$i]['image'] = (!empty($result[$i]['image'])) ? DOMAIN_URL . 'category/' . $result[$i]['image'] : '';
+				$result[$i]['image'] = (!empty($result[$i]['image']))?DOMAIN_URL.'category/'.$result[$i]['image']:'';
 			}
 			$response['error'] = "false";
-			$response['data'] = $result;
+			$response['data']  = $result;
 		} else {
-			$response['error'] = "true";
+			$response['error']   = "true";
 			$response['message'] = "No data found!";
 		}
 		print_r(json_encode($response));
@@ -75,31 +75,31 @@ if (isset($_POST['access_key']) && isset($_POST['get_categories'])) {
 // 2. get_subcategory_by_maincategory() - get sub category details
 if (isset($_POST['access_key']) && isset($_POST['get_subcategory_by_maincategory'])) {
 	/* Parameters to be passed
-		access_key:6808
-		get_subcategory_by_maincategory:1
-		main_id:31
-	*/
+	access_key:6808
+	get_subcategory_by_maincategory:1
+	main_id:31
+	 */
 	if ($access_key != $_POST['access_key']) {
-		$response['error'] = "true";
+		$response['error']   = "true";
 		$response['message'] = "Invalid Access Key";
 		print_r(json_encode($response));
 		return false;
 	}
 	if (isset($_POST['main_id'])) {
-		$id = $db->escapeString($_POST['main_id']);
+		$id  = $db->escapeString($_POST['main_id']);
 		$sql = "SELECT *,(select max(level) from question where question.subcategory=subcategory.id ) as maxlevel FROM `subcategory` WHERE `maincat_id`='$id' and `status`=1 ORDER BY row_order ASC";
 		$db->sql($sql);
 		$result = $db->getResult();
 		// print_r($result);
 		if (!empty($result)) {
 			for ($i = 0; $i < count($result); $i++) {
-				$result[$i]['image'] = (!empty($result[$i]['image'])) ? DOMAIN_URL . 'subcategory/' . $result[$i]['image'] : '';
-				$result[$i]['maxlevel'] = ($result[$i]['maxlevel'] == '' || $result[$i]['maxlevel'] == null) ? '' : $result[$i]['maxlevel'];
+				$result[$i]['image']    = (!empty($result[$i]['image']))?DOMAIN_URL.'subcategory/'.$result[$i]['image']:'';
+				$result[$i]['maxlevel'] = ($result[$i]['maxlevel'] == '' || $result[$i]['maxlevel'] == null)?'':$result[$i]['maxlevel'];
 			}
 			$response['error'] = "false";
-			$response['data'] = $result;
+			$response['data']  = $result;
 		} else {
-			$response['error'] = "true";
+			$response['error']   = "true";
 			$response['message'] = "No data found!";
 		}
 		print_r(json_encode($response));
@@ -108,30 +108,30 @@ if (isset($_POST['access_key']) && isset($_POST['get_subcategory_by_maincategory
 // 3. get_questions_by_subcategory() - get sub category questions
 if (isset($_POST['access_key']) && isset($_POST['get_questions_by_subcategory'])) {
 	/* Parameters to be passed
-		access_key:6808
-		get_questions_by_subcategory:1
-		subcategory:115
-	*/
+	access_key:6808
+	get_questions_by_subcategory:1
+	subcategory:115
+	 */
 	if ($access_key != $_POST['access_key']) {
-		$response['error'] = "true";
+		$response['error']   = "true";
 		$response['message'] = "Invalid Access Key";
 		print_r(json_encode($response));
 		return false;
 	}
 	if (isset($_POST['subcategory'])) {
-		$id = $db->escapeString($_POST['subcategory']);
-		$sql = "SELECT * FROM `question` where subcategory=" . $id . " ORDER by RAND()";
+		$id  = $db->escapeString($_POST['subcategory']);
+		$sql = "SELECT * FROM `question` where subcategory=".$id." ORDER by RAND()";
 		$db->sql($sql);
 		$result = $db->getResult();
 		// print_r($result);
 		if (!empty($result)) {
 			for ($i = 0; $i < count($result); $i++) {
-				$result[$i]['image'] = (!empty($result[$i]['image'])) ? DOMAIN_URL . 'images/questions/' . $result[$i]['image'] : '';
+				$result[$i]['image'] = (!empty($result[$i]['image']))?DOMAIN_URL.'images/questions/'.$result[$i]['image']:'';
 			}
 			$response['error'] = "false";
-			$response['data'] = $result;
+			$response['data']  = $result;
 		} else {
-			$response['error'] = "true";
+			$response['error']   = "true";
 			$response['message'] = "No data found!";
 		}
 		print_r(json_encode($response));
@@ -140,30 +140,30 @@ if (isset($_POST['access_key']) && isset($_POST['get_questions_by_subcategory'])
 // 4. get_questions_by_category() - get category questions
 if (isset($_POST['access_key']) && isset($_POST['get_questions_by_category'])) {
 	/* Parameters to be passed
-		access_key:6808
-		get_questions_by_category:1
-		category:115
-	*/
+	access_key:6808
+	get_questions_by_category:1
+	category:115
+	 */
 	if ($access_key != $_POST['access_key']) {
-		$response['error'] = "true";
+		$response['error']   = "true";
 		$response['message'] = "Invalid Access Key";
 		print_r(json_encode($response));
 		return false;
 	}
 	if (isset($_POST['category'])) {
-		$id = $db->escapeString($_POST['category']);
-		$sql = "SELECT * FROM `question` WHERE category=" . $id . " ORDER BY id DESC";
+		$id  = $db->escapeString($_POST['category']);
+		$sql = "SELECT * FROM `question` WHERE category=".$id." ORDER BY id DESC";
 		$db->sql($sql);
 		$result = $db->getResult();
 		// print_r($result);
 		if (!empty($result)) {
 			for ($i = 0; $i < count($result); $i++) {
-				$result[$i]['image'] = (!empty($result[$i]['image'])) ? DOMAIN_URL . 'images/questions/' . $result[$i]['image'] : '';
+				$result[$i]['image'] = (!empty($result[$i]['image']))?DOMAIN_URL.'images/questions/'.$result[$i]['image']:'';
 			}
 			$response['error'] = "false";
-			$response['data'] = $result;
+			$response['data']  = $result;
 		} else {
-			$response['error'] = "true";
+			$response['error']   = "true";
 			$response['message'] = "No data found!";
 		}
 	}
@@ -172,37 +172,37 @@ if (isset($_POST['access_key']) && isset($_POST['get_questions_by_category'])) {
 //5. report_question() - report a question by user
 if (isset($_POST['report_question']) && isset($_POST['access_key'])) {
 	/* Parameters to be passed
-		access_key:6808
-		report_question:1
-		question_id:115
-		message: Any reporting message
-	*/
+	access_key:6808
+	report_question:1
+	question_id:115
+	message: Any reporting message
+	 */
 	if ($access_key != $_POST['access_key']) {
-		$response['error'] = "true";
+		$response['error']   = "true";
 		$response['message'] = "Invalid Access Key";
 		print_r(json_encode($response));
 		return false;
 	}
 
 	$question_id = $_POST['question_id'];
-	$message = $_POST['message'];
+	$message     = $_POST['message'];
 	if (!empty($question_id) && !empty($message)) {
 		$data = array(
 			'question_id' => $question_id,
-			'message' => $message,
-			'date' => date("Y-m-d"), //$datetime->format('Y\-m\-d\ h:i:s'),
+			'message'     => $message,
+			'date'        => date("Y-m-d"), //$datetime->format('Y\-m\-d\ h:i:s'),
 		);
 		// print_r($data);
 		// return false;
 
-		$db->insert('question_reports', $data); // Table name, column names and respective values
+		$db->insert('question_reports', $data);// Table name, column names and respective values
 		$res = $db->getResult();
 
-		$response['error'] = false;
+		$response['error']   = false;
 		$response['message'] = "Report submitted successfully";
-		$response['id'] = $res[0];
+		$response['id']      = $res[0];
 	} else {
-		$response['error'] = true;
+		$response['error']   = true;
 		$response['message'] = "Please fill all the data and submit!";
 	}
 	print_r(json_encode($response));
@@ -210,11 +210,11 @@ if (isset($_POST['report_question']) && isset($_POST['access_key'])) {
 // 6. get_privacy_policy_settings()
 if (isset($_POST['access_key']) && isset($_POST['privacy_policy_settings']) AND $_POST['privacy_policy_settings'] == 1) {
 	/* Parameters to be passed
-		access_key:6808
-		privacy_policy_settings:1
-	*/
+	access_key:6808
+	privacy_policy_settings:1
+	 */
 	if ($access_key != $_POST['access_key']) {
-		$response['error'] = "true";
+		$response['error']   = "true";
 		$response['message'] = "Invalid Access Key";
 		print_r(json_encode($response));
 		return false;
@@ -226,53 +226,158 @@ if (isset($_POST['access_key']) && isset($_POST['privacy_policy_settings']) AND 
 		$res = $db->getResult();
 		if (!empty($res)) {
 			$response['error'] = "false";
-			$response['data'] = $res[0]['message'];
+			$response['data']  = $res[0]['message'];
 		} else {
-			$response['error'] = "true";
+			$response['error']   = "true";
 			$response['message'] = "No data found!";
 		}
 	} else {
-		$response['error'] = "true";
+		$response['error']   = "true";
 		$response['message'] = "Please pass all the fields";
 	}
 	print_r(json_encode($response));
 }
 
 if (isset($_POST['access_key']) && isset($_POST['registration'])) {
+	/* Parameters to be passed
+	access_key:6808
+	registration:1
+	mobile:any
+	password:any
+	name:any
+	district:any
+	state:any
+	 */
 	if ($access_key != $_POST['access_key']) {
-		$response['error'] = "true";
+		$response['error']   = "true";
 		$response['message'] = "Invalid Access Key";
 		print_r(json_encode($response));
 		return false;
 	}
 
-	$mobile = $db->escapeString($_POST['mobile']);
+	$mobile   = $db->escapeString($_POST['mobile']);
 	$password = $db->escapeString($_POST['password']);
-	$name = $db->escapeString($_POST['name']);
+	$name     = $db->escapeString($_POST['name']);
 	$district = $db->escapeString($_POST['district']);
-	$state = $db->escapeString($_POST['state']);
+	$state    = $db->escapeString($_POST['state']);
+	$sql      = "SELECT * from `users` WHERE mobile= '".$mobile."'";
+	$db->sql($sql);
+	$res = $db->getResult();
+	if (count($res) == 0) {
+		$nowtime = date('Y-m-d H:i:s');
+		$data    = array(
+			'mobile'     => $mobile,
+			'password'   => md5($password),
+			'name'       => $name,
+			'district'   => $district,
+			'state'      => $state,
+			'status'     => 1,
+			'is_prime'   => 0,
+			'created_at' => date('Y-m-d H:i:s'),
+			'updated_at' => date('Y-m-d H:i:s'),
+			'expire_at'  => date("Y-m-d H:i:s", strtotime("+1 month", strtotime($nowtime))),
+		);
+		$insert = $db->insert('users', $data);// Table name, column names and respective values
+		if ($insert) {
+			$response['error']   = false;
+			$response['message'] = "Account has been created";
+		} else {
+			$response['error']   = true;
+			$response['message'] = "Could not create account please try again";
+		}
+
+	} else {
+		$response['error']   = true;
+		$response['message'] = "user already registed with this mobile number";
+	}
+	print_r(json_encode($response));
+
+}
+
+if (isset($_POST['access_key']) && isset($_POST['login'])) {
+	/* Parameters to be passed
+	access_key:6808
+	login:1
+	mobile:any
+	password:any
+	 */
+	if ($access_key != $_POST['access_key']) {
+		$response['error']   = "true";
+		$response['message'] = "Invalid Access Key";
+		print_r(json_encode($response));
+		return false;
+	}
+
+	$mobile       = $db->escapeString($_POST['mobile']);
+	$password     = $db->escapeString($_POST['password']);
+	$passwordHash = md5($password);
+	$sql          = "SELECT * from `users` WHERE mobile= '".$mobile."' AND password = '".$passwordHash."' ";
+	$db->sql($sql);
+	$res = $db->getResult();
+	if (count($res) == 0) {
+		$response['error']   = true;
+		$response['message'] = "Invalid Login";
+	} else {
+		$user = $res[0];
+		unset($user['password']);
+		$response['error']   = null;
+		$response['message'] = "successfully logged in";
+		$response['data']    = $user;
+	}
+
+	print_r(json_encode($response));
+
+}
+
+if (isset($_POST['access_key']) && isset($_POST['get_learing_document'])) {
+	/* Parameters to be passed
+	access_key:6808
+	get_learing_document:1
+	subcategory:anyID
+	level:AnyLevel
+	 */
+	if ($access_key != $_POST['access_key']) {
+		$response['error']   = "true";
+		$response['message'] = "Invalid Access Key";
+		print_r(json_encode($response));
+		return false;
+	}
+
+	$subcategory = $db->escapeString($_POST['subcategory']);
+	$level       = $db->escapeString($_POST['level']);
+	$sql         = "SELECT * from `learing_content` WHERE subcategory= '".$subcategory."' AND level = '".$level."' ";
+	$db->sql($sql);
+	$res = $db->getResult();
+	if (count($res) > 0) {
+		$response['data'] = $res[0];
+	} else {
+		$response['data'] = [];
+	}
+	$response['error']   = null;
+	$response['message'] = "Data loaded";
+	print_r(json_encode($response));
 
 }
 
 /*firebase send message function*/
 function send_message($token, $title, $message, $type) {
 
-/*
-Title 	: Transaction Details
-Message :
-Today Bottles 3
-Total Amount - 50 | Total Balance - 100
- */
+	/*
+	Title 	: Transaction Details
+	Message :
+	Today Bottles 3
+	Total Amount - 50 | Total Balance - 100
+	 */
 
 	require_once 'library/firebase.php';
 	require_once 'library/push.php';
 
 	$firebase = new Firebase();
-	$push = new Push();
+	$push     = new Push();
 
 	// optional payload
-	$payload = array();
-	$payload['team'] = 'India';
+	$payload          = array();
+	$payload['team']  = 'India';
 	$payload['score'] = '5.6';
 
 	$push->setTitle($title);
@@ -285,7 +390,7 @@ Total Amount - 50 | Total Balance - 100
 
 	$json = $response = '';
 
-	$json = $push->getPush();
+	$json     = $push->getPush();
 	$response = $firebase->send($token, $json);
 	return $response;
 }
